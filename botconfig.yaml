@@ -1,0 +1,12 @@
+client_token: BOT_TOKEN
+member_count: TOTAL_MEMBERS
+member_count_channel_id: CHANNEL_ID
+new_member_role_id: ROLE_ID
+new_members_channel_id: CHANNEL_ID
+news_ping_role_id: ROLE_ID
+rules_channel_id: CHANNEL_ID
+server_id: SERVER_ID
+stream_ping_role_id: ROLE_ID
+ticket_number: CURRENT_TICKET_NUMBER
+tickets_category_id: CATEGORY_ID
+everyone_role_id: ROLE_ID
