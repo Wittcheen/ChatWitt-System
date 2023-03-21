@@ -6,12 +6,12 @@ To use the [interactions](https://github.com/interactions-py/interactions.py) li
 ```
 pip install -U discord-py-interactions
 ```
-<br><br>
+<br>
 To use the [interactions tasks](https://github.com/Catalyst4222/interactions-tasks), you also need need to install it first.
 ```
 pip install interactions-tasks
 ```
-<br><br>
+<br>
 This project also uses 'yaml' files, so need to install pyyaml.
 ```
 pip3 install pyyaml
