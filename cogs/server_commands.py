@@ -1,8 +1,27 @@
 import interactions
+from cogs.random_commands import RandomCommands
 
 import yaml
 with open("./server_ids.yaml") as config_file:
 	server_ids = yaml.safe_load(config_file)
+
+RULES = interactions.Embed(
+    color = int("0x2f3136", 0),
+    description = "<:chatwitt:1048944473675137054>  | ChatWitt - Rules |  <:chatwitt:1048944473675137054>\n\n" +
+    ":flag_us: | **§1 Name and Avatar**\n" +
+    "> • 1.1 - Faking other people, especially staff members is forbidden.\n" +
+    "> • 1.2 - Racist, perverted or sexist names & avatars are strictly forbidden.\n\n"
+    ":flag_us: | **§2 Language usage**\n" +
+    "> • 2.1 - Use english when communicating with others, exept in the danish channel.\n" +
+    "> • 2.2 - Threats of any kind are prohibited.\n" +
+    "> • 2.3 - Insults, spam or other inappropriate behavior in any form are strictly prohibited.\n\n" +
+    ":flag_us: | **§3 General Behavior**\n" +
+    "> • 3.1 - The voices of other persons may only be recorded with their consent.\n" +
+    "> • 3.2 - Any publication of private data is strictly prohibited.\n" +
+    "> • 3.3 - Channel hopping (the constant changing of channels) is forbidden.\n" +
+    "> • 3.4 - Taking advantage of tickets is forbidden, e.g. using the ticket without needing it.\n" +
+    "> • 3.5 - Report rule-breaking behavior you seen, to any staff member."
+)
 
 NEWS_PING_BUTTON = interactions.Button(
 	style = interactions.ButtonStyle.SECONDARY,
@@ -28,10 +47,26 @@ class ServerCommands(interactions.Extension):
 	@interactions.slash_command(name = "ssm", description = "(Send Server Message) - writes the chosen message",
 		default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_ids["server_id"]])
 	@interactions.slash_option(name = "command", description = "choose the server message that it should send", opt_type = interactions.OptionType.STRING, required = True,
-		choices = [interactions.SlashCommandChoice(name = "reactroles", value = "reactroles")])
+		choices = [interactions.SlashCommandChoice(name = "rules", value = "rules"), interactions.SlashCommandChoice(name = "reactroles", value = "reactroles"),
+					interactions.SlashCommandChoice(name = "news", value = "news"), interactions.SlashCommandChoice(name = "say", value = "say")])
 	async def ssm(self, ctx: interactions.SlashContext, command: str):
+		if command == "rules":
+			await ServerCommands.rules(self, ctx)
 		if command == "reactroles":
 			await ServerCommands.reactroles(self, ctx)
+		if command == "news":
+			await RandomCommands.news(self, ctx)
+		if command == "say":
+			await RandomCommands.say(self, ctx)
+	#endregion
+
+	#region - RULES COMMAND
+	async def rules(self, ctx: interactions.SlashContext):
+		RULES.set_footer(text = "ChatWitt | Rules", icon_url = ctx.guild.icon._url)
+		RULES.set_thumbnail(url = ctx.guild.icon._url)
+		await ctx.channel.send(embeds = RULES)
+		message = await ctx.send(content = "Done.", ephemeral = True)
+		await ctx.delete(message.id)
 	#endregion
 
 	#region - REACT ROLES COMMAND
