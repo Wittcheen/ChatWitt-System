@@ -256,7 +256,7 @@ class Giveaways(interactions.Extension):
 				*[interactions.StringSelectOption(
 					label = i+1, value = i+1
 				) for i in range(10)],
-				placeholder = "Choose count of reroll"
+				placeholder = "Choose amount of reroll"
 			)
 			action_row = interactions.ActionRow.split_components(*[select_menu, select_menu_count], count_per_row = 1)
 			await ctx.send(components = action_row, ephemeral = True)
@@ -266,27 +266,27 @@ class Giveaways(interactions.Extension):
 	@interactions.component_callback("select_ga_reroll")
 	async def select_ga_reroll(self, ctx: interactions.ComponentContext):
 		if "reroll_var" in globals():
-			message = await ctx.send(content = f'You choose "{ctx.values[0]}"', ephemeral = True)
+			message = await ctx.send(content = f'You chose "{ctx.values[0]}"', ephemeral = True)
 			await ctx.delete(message.id)
 			await self.reroll_func(ctx.values[0])
 			await ctx.delete(ctx.message.id)
 		else:
 			global reroll_var
 			reroll_var = ctx.values[0]
-			message = await ctx.send(content = f'You choose "{ctx.values[0]}"', ephemeral = True)
+			message = await ctx.send(content = f'You chose "{ctx.values[0]}"', ephemeral = True)
 			await ctx.delete(message.id)
 
 	@interactions.component_callback("select_ga_count")
 	async def select_ga_count(self, ctx: interactions.ComponentContext):
 		if "reroll_var" in globals():
-			message = await ctx.send(content = f'You choose "{ctx.values[0]}"', ephemeral = True)
+			message = await ctx.send(content = f'You chose "{ctx.values[0]}"', ephemeral = True)
 			await ctx.delete(message.id)
 			await self.reroll_func(ctx.values[0])
 			await ctx.delete(ctx.message.id)
 		else:
 			global reroll_var
 			reroll_var = ctx.values[0]
-			message = await ctx.send(content = f'You choose "{ctx.values[0]}"', ephemeral = True)
+			message = await ctx.send(content = f'You chose "{ctx.values[0]}"', ephemeral = True)
 			await ctx.delete(message.id)
 	#endregion
 
