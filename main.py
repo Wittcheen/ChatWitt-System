@@ -11,12 +11,12 @@ import datetime
 
 @interactions.listen()
 async def on_startup():
-    await client.wait_until_ready()
-    now = datetime.datetime.now()
-    print(f"[{now.day}/{now.month}/{now.year} - {now.hour}:{now.minute}:{now.second}] '{client.user.username}' is now online!")
+	await client.wait_until_ready()
+	now = datetime.datetime.now()
+	print(f"[{now.day}/{now.month}/{now.year} - {now.hour}:{now.minute}:{now.second}] '{client.user.username}' is now online!")
 
 for filename in os.listdir("./cogs"):
-    if filename.endswith(".py"):
-        client.load_extension(f"cogs.{filename[:-3]}")
+	if filename.endswith(".py"):
+		client.load_extension(f"cogs.{filename[:-3]}")
 
 client.start(os.getenv('client_token'))

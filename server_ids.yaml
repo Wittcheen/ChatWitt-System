@@ -2,4 +2,6 @@ member_count: 107
 member_count_channel_id: 1049310291898417173
 new_member_role_id: 828680309465808978
 new_members_channel_id: 828680309482455106
+news_ping_role_id: 848209923338272798
 server_id: 828680309465808977
+stream_ping_role_id: 1049449192436805672
