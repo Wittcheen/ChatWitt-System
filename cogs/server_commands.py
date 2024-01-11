@@ -1,5 +1,6 @@
 import interactions
 from cogs.random_commands import RandomCommands
+from cogs.mod_application import Tickets
 
 import yaml
 with open("./server_ids.yaml") as config_file:
@@ -48,7 +49,8 @@ class ServerCommands(interactions.Extension):
 		default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_ids["server_id"]])
 	@interactions.slash_option(name = "command", description = "choose the server message that it should send", opt_type = interactions.OptionType.STRING, required = True,
 		choices = [interactions.SlashCommandChoice(name = "rules", value = "rules"), interactions.SlashCommandChoice(name = "reactroles", value = "reactroles"),
-					interactions.SlashCommandChoice(name = "news", value = "news"), interactions.SlashCommandChoice(name = "say", value = "say")])
+					interactions.SlashCommandChoice(name = "news", value = "news"), interactions.SlashCommandChoice(name = "say", value = "say"),
+			  		interactions.SlashCommandChoice(name = "opentickets", value = "opentickets")])
 	async def ssm(self, ctx: interactions.SlashContext, command: str):
 		if command == "rules":
 			await ServerCommands.rules(self, ctx)
@@ -58,6 +60,8 @@ class ServerCommands(interactions.Extension):
 			await RandomCommands.news(self, ctx)
 		if command == "say":
 			await RandomCommands.say(self, ctx)
+		if command == "opentickets":
+			await Tickets.opentickets(self, ctx)
 	#endregion
 
 	#region - RULES COMMAND
