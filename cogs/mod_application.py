@@ -69,7 +69,7 @@ class Tickets(interactions.Extension):
 		if await self.check_if_user_exist(ctx.author_id):
 			await ctx.send("You already have a active ticket!", ephemeral = True)
 		else:
-			createdChannel = await ctx.guild.create_text_channel(category = server_ids["tickets_category_id"], name = f'ticket-{server_ids["ticket_number"]}',
+			createdChannel = await ctx.guild.create_text_channel(category = server_ids["mod_tickets_category_id"], name = f'ticket-{ctx.author.username}',
 			permission_overwrites = [interactions.PermissionOverwrite(id = int(ctx.author_id), type = 1, allow = interactions.Permissions.VIEW_CHANNEL),
 			interactions.PermissionOverwrite(id = server_ids["everyone_role_id"], type = 0, deny = interactions.Permissions.VIEW_CHANNEL)]
 			)
