@@ -7,10 +7,16 @@ with open("./server_ids.yaml") as config_file:
 	server_ids = yaml.safe_load(config_file)
 
 TWITCH_EMBED = interactions.Embed(
-    color = int("0x2f3136", 0),
-    description = "<:chatwitt:1048944473675137054>  | ChatWitt - Stream |  <:chatwitt:1048944473675137054>\n\n" +
-    "**Sjippi is now live on Twitch!**\n\n" + f"Follow the [link](https://twitch.tv/sjippi) to watch the stream.\n" +
-    "Would appreciate if you gave it a chance."
+	color = int("0x2f3136", 0),
+	description = "<:chatwitt:1048944473675137054>  | ChatWitt - Stream |  <:chatwitt:1048944473675137054>\n\n" +
+	"**Sjippi is now live on Twitch!**\n\n" + "Swing by the chat and let's have some fun!\n" +
+	"_Press the button to tune in to the stream._"
+)
+
+STREAM_LINK_BUTTON = interactions.Button(
+	style = interactions.ButtonStyle.LINK,
+	label = "Stream Link",
+	url = "https://twitch.tv/sjippi"
 )
 
 USER = "Sjippi"
@@ -25,13 +31,22 @@ class TwitchNoti(interactions.Extension):
 		global streaming
 		streaming = False
 
+	#region - TWITCH LIVE COMMAND
+	@interactions.slash_command(name = "live", description = "sends out a stream notification",
+		default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_ids["server_id"]])
+	async def live(self, ctx: interactions.SlashContext):
+	        await self.live_func()
+	        message = await ctx.send(content = "Done.", ephemeral = True)
+	        await ctx.delete(message.id)
+	#endregion
+
 	#region - TWITCH LIVE FUNCTION
 	async def live_func(self):
 		channel = self.client.get_channel(channel_id = server_ids["streams_channel_id"])
 		stream_ping = channel.guild.get_role(server_ids["stream_ping_role_id"])
 		TWITCH_EMBED.set_footer(text = "ChatWitt | Stream", icon_url = channel.guild.icon._url)
 		TWITCH_EMBED.set_thumbnail(url = "https://static-cdn.jtvnw.net/jtv_user_pictures/6889a7f4-17b0-4b70-85b9-4e911a1043ae-profile_image-300x300.png")
-		await channel.send(f"||{stream_ping.mention}||", embeds = TWITCH_EMBED)
+		await channel.send(f"||{stream_ping.mention}||", embeds = TWITCH_EMBED, components = STREAM_LINK_BUTTON)
 	#endregion
 
 	#region - GET TWITCH OAUTH TOKEN API REQUEST
