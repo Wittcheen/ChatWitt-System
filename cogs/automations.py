@@ -1,3 +1,6 @@
+# (c) 2024 Christoffer Wittchen
+# Released under the MIT License.
+
 import interactions
 
 import yaml
