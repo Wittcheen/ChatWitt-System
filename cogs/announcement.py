@@ -3,9 +3,7 @@
 
 import interactions
 
-import yaml
-with open("./yaml/id_map.yaml") as config_file:
-    id_map = yaml.safe_load(config_file)
+from utils.yaml_file import server_id, id_map
 
 ANNOUNCEMENT_MODAL = interactions.Modal(
     custom_id = "announcement_form",
@@ -27,7 +25,7 @@ class Announcement(interactions.Extension):
 
     #region - ANNOUNCE COMMAND
     @interactions.slash_command(name = "announce", description = "send a new announcement",
-        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [id_map["server"]])
+        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_id])
     @interactions.slash_option(name = "type", description = "choose the format of the message", opt_type = interactions.OptionType.STRING, required = True,
         choices = [interactions.SlashCommandChoice(name = "embed", value = "embed"), interactions.SlashCommandChoice(name = "text", value = "text")])
     async def announce(self, ctx: interactions.SlashContext, type: str):

@@ -22,7 +22,6 @@ def load_extensions(folder_name):
     for filename in os.listdir(f"./{folder_name}"):
         if filename.endswith(".py"):
             client.load_extension(f"{folder_name}.{filename[:-3]}")
-
 load_extensions("cogs")
 
 client.start(os.getenv("client_token"))

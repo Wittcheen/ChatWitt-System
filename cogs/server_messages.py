@@ -4,9 +4,7 @@
 import interactions
 from utils.trie import Trie
 
-import yaml
-with open("./yaml/id_map.yaml") as config_file:
-    id_map = yaml.safe_load(config_file)
+from utils.yaml_file import server_id, id_map
 
 INVITE_LINK = "https://discord.gg/GJyyjrurHj"
 
@@ -55,7 +53,7 @@ class ServerMessages(interactions.Extension):
 
     #region - SSM (Send Server Message) COMMAND
     @interactions.slash_command(name = "ssm", description = "(Send Server Message) - send a server message",
-        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [id_map["server"]])
+        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_id])
     @interactions.slash_option(name = "cmd", description = "choose the server message", opt_type = interactions.OptionType.STRING,
         required = True, autocomplete = True)
     async def ssm(self, ctx: interactions.SlashContext, cmd: str):

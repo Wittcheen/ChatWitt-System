@@ -3,9 +3,7 @@
 
 import interactions
 
-import yaml
-with open("./yaml/id_map.yaml") as config_file:
-    id_map = yaml.safe_load(config_file)
+from utils.yaml_file import id_map
 
 class Automations(interactions.Extension):
     def __init__(self, client):

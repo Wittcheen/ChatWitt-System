@@ -3,9 +3,7 @@
 
 import interactions
 
-import yaml
-with open("./yaml/id_map.yaml") as config_file:
-    id_map = yaml.safe_load(config_file)
+from utils.yaml_file import server_id
 
 SAY_MODAL = interactions.Modal(
     custom_id = "say_form",
@@ -22,7 +20,7 @@ class Miscellaneous(interactions.Extension):
 
     #region - PURGE COMMAND
     @interactions.slash_command(name = "purge", description = "deletes the amount of messages",
-        default_member_permissions = interactions.Permissions.MANAGE_MESSAGES, scopes = [id_map["server"]])
+        default_member_permissions = interactions.Permissions.MANAGE_MESSAGES, scopes = [server_id])
     @interactions.slash_option(name = "amount", description = "specify the amount to delete", opt_type = interactions.OptionType.INTEGER)
     async def purge(self, ctx: interactions.SlashContext, amount: int = 1):
         await ctx.channel.purge(deletion_limit = amount)
@@ -32,7 +30,7 @@ class Miscellaneous(interactions.Extension):
 
     #region - SAY COMMAND
     @interactions.slash_command(name = "say", description = "send a message as the bot",
-        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [id_map["server"]])
+        default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_id])
     async def say(self, ctx: interactions.SlashContext):
         await ctx.send_modal(modal = SAY_MODAL)
     @interactions.modal_callback("say_form")
