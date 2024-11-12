@@ -28,7 +28,7 @@ POLL_MODAL = interactions.Modal(
     )]
 )
 
-class Polls(interactions.Extension):
+class PollSystem(interactions.Extension):
     def __init__(self, client):
         self.client: interactions.Client = client
 
@@ -128,4 +128,4 @@ class Polls(interactions.Extension):
     #endregion
 
 def setup(client):
-    Polls(client)
+    PollSystem(client)
