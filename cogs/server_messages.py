@@ -61,7 +61,7 @@ class ServerMessages(interactions.Extension):
         if callable(handler):
             await handler(ctx)
         else:
-            await ctx.send("Command is not callable!", ephemeral = True)
+            await ctx.send(content = "Command is not callable!", ephemeral = True)
 
     @ssm.autocomplete("cmd")
     async def __ssm_autocomplete(self, ctx: interactions.AutocompleteContext):
@@ -125,18 +125,18 @@ class ServerMessages(interactions.Extension):
     async def __ping_button(self, ctx: interactions.ComponentContext):
         if id_map["ping_role"] in ctx.author.roles:
             await ctx.author.remove_role(id_map["ping_role"])
-            await ctx.send('Du fjernede "Ping" rollen fra dig selv!', ephemeral = True)
+            await ctx.send(content = 'Du fjernede "Ping" rollen fra dig selv!', ephemeral = True)
         elif id_map["ping_role"] not in ctx.author.roles:
             await ctx.author.add_role(id_map["ping_role"])
-            await ctx.send('Du fik rollen "Ping".', ephemeral = True)
+            await ctx.send(content = 'Du fik rollen "Ping".', ephemeral = True)
     @interactions.component_callback("stream_ping_button")
     async def __stream_ping_button(self, ctx: interactions.ComponentContext):
         if id_map["stream_ping_role"] in ctx.author.roles:
             await ctx.author.remove_role(id_map["stream_ping_role"])
-            await ctx.send('Du fjernede "Stream Ping" rollen fra dig selv!', ephemeral = True)
+            await ctx.send(content = 'Du fjernede "Stream Ping" rollen fra dig selv!', ephemeral = True)
         elif id_map["stream_ping_role"] not in ctx.author.roles:
             await ctx.author.add_role(id_map["stream_ping_role"])
-            await ctx.send('Du fik rollen "Stream Ping".', ephemeral = True)
+            await ctx.send(content = 'Du fik rollen "Stream Ping".', ephemeral = True)
     #endregion
 
 def setup(client):
