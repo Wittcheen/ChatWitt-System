@@ -3,6 +3,7 @@
 
 from dataclasses import dataclass, field
 import interactions
+from cogs.miscellaneous import log_message
 
 from utils.yaml_file import server_id
 
@@ -124,6 +125,7 @@ class PollSystem(interactions.Extension):
             if message_reaction.emoji.name == END_POLL_EMOJI:
                 await self.close_poll(message_reaction.message)
                 del POLLS[poll_id]
+                await log_message(self, f"Poll `{poll.title}` has been closed by {message_reaction.author.mention}!")
         await message_reaction.message.remove_reaction(message_reaction.emoji, message_reaction.author)
     #endregion
 

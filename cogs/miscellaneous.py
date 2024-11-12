@@ -3,7 +3,7 @@
 
 import interactions
 
-from utils.yaml_file import server_id
+from utils.yaml_file import server_id, id_map
 
 SAY_MODAL = interactions.Modal(
     custom_id = "say_form",
@@ -17,6 +17,12 @@ SAY_MODAL = interactions.Modal(
 class Miscellaneous(interactions.Extension):
     def __init__(self, client):
         self.client: interactions.Client = client
+
+    #region - LOG HANDLER
+    async def log(self, message: str):
+        channel = self.client.get_channel(id_map["logs_channel"])
+        await channel.send(content = message)
+    #endregion
 
     #region - PURGE COMMAND
     @interactions.slash_command(name = "purge", description = "deletes the amount of messages",
@@ -42,3 +48,6 @@ class Miscellaneous(interactions.Extension):
 
 def setup(client):
     Miscellaneous(client)
+
+async def log_message(self, message: str):
+    await Miscellaneous.log(self, message)
