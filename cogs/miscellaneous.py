@@ -20,8 +20,9 @@ class Miscellaneous(interactions.Extension):
 
     #region - LOG HANDLER
     async def log(self, message: str):
-        channel = self.client.get_channel(id_map["logs_channel"])
-        await channel.send(content = message)
+        logs_channel = self.client.get_channel(id_map["logs_channel"])
+        if logs_channel is not None:
+            await logs_channel.send(content = message)
     #endregion
 
     #region - PURGE COMMAND

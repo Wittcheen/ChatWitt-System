@@ -4,6 +4,7 @@
 import interactions
 import requests, os
 from interactions.models.internal.tasks import IntervalTrigger
+from cogs.miscellaneous import log_message
 
 from utils.yaml_file import server_id, id_map
 
@@ -52,7 +53,7 @@ class TwitchNotification(interactions.Extension):
     #endregion
 
     #region - GET TWITCH OAUTH TOKEN API REQUEST
-    def __get_twitch_oauth_token(self):
+    async def __get_twitch_oauth_token(self):
         token_url = "https://id.twitch.tv/oauth2/token"
         params = {
             "client_id": os.getenv("twitch_client_id"),
@@ -66,11 +67,12 @@ class TwitchNotification(interactions.Extension):
             return response_data.get("access_token")
         except requests.exceptions.RequestException as e:
             print(f"Error getting Twitch data: {e}")
+            await log_message(self, f"### Error getting Twitch data:\n```{e}```")
             return None
     #endregion
 
     #region - GET TWITCH USER LIVE API REQUEST
-    def __get_twitch_user_live(self, username, token) -> bool:
+    async def __get_twitch_user_live(self, username, token) -> bool:
         base_url = "https://api.twitch.tv/helix/streams"
         headers = {
             "Client-ID": os.getenv("twitch_client_id"),
@@ -86,15 +88,16 @@ class TwitchNotification(interactions.Extension):
                 return False
         except requests.exceptions.RequestException as e:
             print(f"Error getting Twitch data: {e}")
+            await log_message(self, f"### Error getting Twitch data:\n```{e}```")
             return False
     #endregion
 
     #region - CHECK TWITCH USER IS LIVE EVENT
     @interactions.Task.create(IntervalTrigger(minutes = 3))
     async def check_for_stream(self):
-        token = self.__get_twitch_oauth_token()
+        token = await self.__get_twitch_oauth_token()
         if token:
-            is_live = self.__get_twitch_user_live(USER.lower(), token)
+            is_live = await self.__get_twitch_user_live(USER.lower(), token)
             global streaming
             if is_live and not streaming:
                 await self.live_func()
