@@ -1,4 +1,4 @@
-# (c) 2024 Christoffer Wittchen
+# (c) 2025 Christoffer Wittchen
 # Released under the MIT License.
 
 import interactions

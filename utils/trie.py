@@ -1,4 +1,4 @@
-# (c) 2024 Christoffer Wittchen
+# (c) 2025 Christoffer Wittchen
 # Released under the MIT License.
 
 class _TrieNode:
@@ -16,7 +16,7 @@ class Trie:
         """ Recursively prints the structure of the Trie in a readable format.\n
         Indicates the end of words with `$` """
         def __recur(node: _TrieNode, indent: str):
-            return "".join(indent + char + ("$" if child_node.is_end else "") + __recur(child_node, indent + "  ") 
+            return "".join(indent + char + ("$" if child_node.is_end else "") + __recur(child_node, indent + "  ")
                 for char, child_node in node.children.items())
         return __recur(self.root, "\n")
 
