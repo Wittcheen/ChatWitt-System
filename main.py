@@ -1,4 +1,4 @@
-# (c) 2024 Christoffer Wittchen
+# (c) 2025 Christoffer Wittchen
 # Released under the MIT License.
 
 import interactions
@@ -11,12 +11,26 @@ client = interactions.Client(intents = interactions.Intents.DEFAULT | interactio
 | interactions.Intents.MESSAGE_CONTENT, status = interactions.Status.ONLINE)
 
 import datetime
+from utils.database import DatabaseManager
+_db = DatabaseManager()
 
+#region - STARTUP
 @interactions.listen()
 async def on_startup():
+    """ Runs when the bot is starting up. """
     await client.wait_until_ready()
     now = datetime.datetime.now()
     print(f"[{now:%d/%m/%Y - %H:%M:%S}] '{client.user.username}' is now online!")
+    await _db.create_pool()
+#endregion
+
+#region - SHUTDOWN
+@interactions.listen()
+async def on_shutdown():
+    """ Runs when the bot is shutting down. """
+    print(f"'{client.user.username}' is shutting down...")
+    await _db.close_pool()
+#endregion
 
 def load_extensions(folder_name):
     for filename in os.listdir(f"./{folder_name}"):
