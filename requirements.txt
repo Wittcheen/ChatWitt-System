@@ -1,0 +1,7 @@
+discord-py-interactions==5.8.0
+interactions-tasks
+python-dotenv
+pyyaml
+requests
+aiomysql
+asyncio
