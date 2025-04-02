@@ -56,8 +56,8 @@ class TwitchNotification(interactions.Extension):
     async def __get_twitch_oauth_token(self):
         token_url = "https://id.twitch.tv/oauth2/token"
         params = {
-            "client_id": os.getenv("twitch_client_id"),
-            "client_secret": os.getenv("twitch_client_secret"),
+            "client_id": os.getenv("TWITCH_CLIENT_ID"),
+            "client_secret": os.getenv("TWITCH_CLIENT_SECRET"),
             "grant_type": "client_credentials"
         }
         try:
@@ -75,7 +75,7 @@ class TwitchNotification(interactions.Extension):
     async def __get_twitch_user_live(self, username, token) -> bool:
         base_url = "https://api.twitch.tv/helix/streams"
         headers = {
-            "Client-ID": os.getenv("twitch_client_id"),
+            "Client-ID": os.getenv("TWITCH_CLIENT_ID"),
             "Authorization": f"Bearer {token}",
         }
         params = { "user_login": username }

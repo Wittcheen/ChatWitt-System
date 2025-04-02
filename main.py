@@ -38,4 +38,4 @@ def load_extensions(folder_name):
             client.load_extension(f"{folder_name}.{filename[:-3]}")
 load_extensions("cogs")
 
-client.start(os.getenv("client_token"))
+client.start(os.getenv("CLIENT_TOKEN"))

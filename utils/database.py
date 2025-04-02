@@ -36,10 +36,10 @@ class DatabaseManager:
         """ Creates the database connection pool. """
         if self.pool is None:
             self.pool = await aiomysql.create_pool(
-                host = os.getenv("db_endpoint"), port = 3306,
-                user = os.getenv("db_username"),
-                password = os.getenv("db_password"),
-                db = os.getenv("db_name"),
+                host = os.getenv("DB_ENDPOINT"), port = 3306,
+                user = os.getenv("DB_USERNAME"),
+                password = os.getenv("DB_PASSWORD"),
+                db = os.getenv("DB_NAME"),
                 maxsize = 10
             )
 
