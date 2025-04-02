@@ -59,10 +59,13 @@ class ServerMessages(interactions.Extension):
         default_member_permissions = interactions.Permissions.ADMINISTRATOR, scopes = [server_id])
     @interactions.slash_option(name = "cmd", description = "choose the server message", opt_type = interactions.OptionType.STRING,
         required = True, autocomplete = True)
-    async def ssm(self, ctx: interactions.SlashContext, cmd: str):
+    @interactions.slash_option(name = "message_id", description = "message id to edit", opt_type = interactions.OptionType.STRING)
+    async def ssm(self, ctx: interactions.SlashContext, cmd: str, message_id: str = None):
         handler = self._messages[cmd]
         if callable(handler):
-            await handler(ctx)
+            if message_id and cmd not in {"welcome", "rules", "roles"}:
+                return await ctx.send(content = f"`{cmd}` cannot use a message ID!", ephemeral = True)
+            await handler(ctx, message_id)
         else:
             await ctx.send(content = "Command is not callable!", ephemeral = True)
 
@@ -83,10 +86,10 @@ class ServerMessages(interactions.Extension):
     #endregion
 
     #region - WELCOME COMMAND
-    async def welcome(self, ctx: interactions.SlashContext):
+    async def welcome(self, ctx: interactions.SlashContext, message_id: str = None):
         channel_keys = ["rules_channel", "announcement_channel", "roles_channel", "chat_channel", "mod_ticket_channel"]
         channels = { key: ctx.guild.get_channel(id_map[key]) for key in channel_keys if id_map[key] }
-        await ctx.channel.send(content = ("# Velkommen til ChatWitt!\n\n"
+        welcome_message = ("# Velkommen til ChatWitt!\n\n"
             "Her kan du finde diverse kanaler med information og nyheder, samt kommunikere med andre medlemmer og staffs.\n"
             "Se her for at få en detaljeret oversigt over de forskellige kanaler og deres formål:\n\n"
             f"> {channels['rules_channel'].mention} Læs alle vores regler.\n"
@@ -94,21 +97,18 @@ class ServerMessages(interactions.Extension):
             f"> {channels['roles_channel'].mention} Giv dig selv pings roller.\n> \n"
             f"> {channels['chat_channel'].mention} Skriv med andre medlemmer om hvad som helst.\n"
             f"> {channels['mod_ticket_channel'].mention} Ansøg om mod på streamen.\n\n"
-            f"Discord invite link: {INVITE_LINK}"))
-        msg = await ctx.send(content = "_The welcome message has been sent._", ephemeral = True)
-        await ctx.delete(msg.id)
+            f"Discord invite link: {INVITE_LINK}")
+        await self.send_or_edit_message(ctx, message_id = message_id, content = welcome_message)
     #endregion
 
     #region - RULES COMMAND
-    async def rules(self, ctx: interactions.SlashContext):
+    async def rules(self, ctx: interactions.SlashContext, message_id: str = None):
         RULES_DANISH.set_footer(text = "ChatWitt | Rules", icon_url = ctx.guild.icon._url)
-        await ctx.channel.send(embeds = RULES_DANISH)
-        msg = await ctx.send(content = "_The rules has been sent._", ephemeral = True)
-        await ctx.delete(msg.id)
+        await self.send_or_edit_message(ctx, message_id = message_id, content = "", embeds = RULES_DANISH)
     #endregion
 
     #region - ROLES COMMAND MESSAGE
-    async def roles(self, ctx: interactions.SlashContext):
+    async def roles(self, ctx: interactions.SlashContext, message_id: str = None):
         role_keys = ["ping_role", "stream_ping_role"]
         roles = { key: ctx.guild.get_role(id_map[key]) for key in role_keys }
         embed = interactions.Embed(
@@ -121,9 +121,7 @@ class ServerMessages(interactions.Extension):
             "_Du kan altid trykke igen, for at fjerne rollen fra dig selv._"
         ))
         embed.set_footer(text = "ChatWitt | Roles", icon_url = ctx.guild.icon._url)
-        await ctx.channel.send(embeds = embed, components = PING_BUTTONS)
-        msg = await ctx.send(content = "_The roles embed has been sent._", ephemeral = True)
-        await ctx.delete(msg.id)
+        await self.send_or_edit_message(ctx, message_id = message_id, content = "", embeds = embed)
     @interactions.component_callback("ping_button")
     async def __ping_button(self, ctx: interactions.ComponentContext):
         if id_map["ping_role"] in ctx.author.roles:
@@ -140,6 +138,22 @@ class ServerMessages(interactions.Extension):
         elif id_map["stream_ping_role"] not in ctx.author.roles:
             await ctx.author.add_role(id_map["stream_ping_role"])
             await ctx.send(content = "Du modtog rollen `Stream Ping`.", ephemeral = True)
+    #endregion
+
+    #region - SEND OR EDIT MESSAGE
+    async def send_or_edit_message(self, ctx: interactions.SlashContext, message_id: str = None, content: str = None, embeds: interactions.Embed = None, component = None):
+        if message_id:
+            try:
+                message = await ctx.channel.fetch_message(message_id = int(message_id))
+                await message.edit(content = content, embeds = embeds, components = component)
+                msg = await ctx.send(content = "_Message has been updated._", ephemeral = True)
+                await ctx.delete(msg.id)
+            except:
+                await ctx.send(content = "Failed to edit the message. Ensure the ID is correct.", ephemeral = True)
+        else:
+            await ctx.channel.send(content = content, embeds = embeds, components = component)
+            msg = await ctx.send(content = "_The message has been sent._", ephemeral = True)
+            await ctx.delete(msg.id)
     #endregion
 
 def setup(client):
