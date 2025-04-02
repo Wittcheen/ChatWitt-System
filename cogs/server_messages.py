@@ -2,6 +2,7 @@
 # Released under the MIT License.
 
 import interactions
+from cogs.mod_ticket_service import ModTicketService
 from utils.trie import Trie
 
 from utils.yaml_file import server_id, id_map
@@ -42,10 +43,12 @@ class ServerMessages(interactions.Extension):
     def __init__(self, client):
         self.client: interactions.Client = client
 
+        mod_ticket_service = client.get_ext("cogs.mod_ticket_service")
         self._messages = {
             "welcome": self.welcome,
             "rules": self.rules,
-            "roles": self.roles
+            "roles": self.roles,
+            "mod_ticket": mod_ticket_service.mod_ticket
         }
         self.trie = Trie()
         for name in self._messages:
@@ -68,7 +71,7 @@ class ServerMessages(interactions.Extension):
         input = ctx.input_text or ""
         if not input:
             await ctx.send(choices = [
-                {"name": name, "value": name} for name in self._messages
+                {"name": name.replace("_", " "), "value": name} for name in self._messages
             ])
             return
         # Search the Trie for command names matching the user's input
@@ -81,7 +84,7 @@ class ServerMessages(interactions.Extension):
 
     #region - WELCOME COMMAND
     async def welcome(self, ctx: interactions.SlashContext):
-        channel_keys = ["rules_channel", "announcement_channel", "roles_channel", "chat_channel", "mod_tickets_channel"]
+        channel_keys = ["rules_channel", "announcement_channel", "roles_channel", "chat_channel", "mod_ticket_channel"]
         channels = { key: ctx.guild.get_channel(id_map[key]) for key in channel_keys if id_map[key] }
         await ctx.channel.send(content = ("# Velkommen til ChatWitt!\n\n"
             "Her kan du finde diverse kanaler med information og nyheder, samt kommunikere med andre medlemmer og staffs.\n"
@@ -90,7 +93,7 @@ class ServerMessages(interactions.Extension):
             f"> {channels['announcement_channel'].mention} Se de seneste nyheder.\n"
             f"> {channels['roles_channel'].mention} Giv dig selv pings roller.\n> \n"
             f"> {channels['chat_channel'].mention} Skriv med andre medlemmer om hvad som helst.\n"
-            f"> {channels['mod_tickets_channel'].mention} Ansøg om mod på streamen.\n\n"
+            f"> {channels['mod_ticket_channel'].mention} Ansøg om mod på streamen.\n\n"
             f"Discord invite link: {INVITE_LINK}"))
         msg = await ctx.send(content = "_The welcome message has been sent._", ephemeral = True)
         await ctx.delete(msg.id)
