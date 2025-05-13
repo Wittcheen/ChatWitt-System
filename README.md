@@ -1,5 +1,5 @@
 # ChatWitt-System
-A system Discord bot to the server 'ChatWitt', designed to perform a wide range of functions to enhance server management and user experience.
+A system Discord bot for the server 'ChatWitt', designed to perform a wide range of functions that enhance server management and improve user experience.
 <br/><br/>
 A Discord bot that is programmed to perform a wide range of functions
 
