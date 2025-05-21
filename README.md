@@ -1,4 +1,4 @@
-# ChatWitt-System
+# ChatWitt System
 A system Discord bot for the server 'ChatWitt', designed to simplify server management and enhance the user experience.
 <br/><br/>
 The Discord bot is programmed with a wide range of features
